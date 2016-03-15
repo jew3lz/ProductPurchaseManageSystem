@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pc.dao.OrderDAO">
+
+    <resultMap id="OrderDO" type="com.pc.domain.dataobject.OrderDO">
+        <id property="id" column="O_ID" jdbcType="VARCHAR"/>
+        <result property="modified" column="O_MODIFIED" jdbcType="TIMESTAMP"/>
+        <result property="proList" column="O_PRO_LIST" jdbcType="VARCHAR"/>
+        <result property="staffId" column="O_STAFF_ID" jdbcType="VARCHAR"/>
+        <result property="status" column="O_STATUS" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <select id="queryOrder" parameterType="com.pc.query.OrderQuery" resultMap="OrderDO">
+        SELECT
+        *
+        FROM `ORDER`
+        WHERE O_MODIFIED <![CDATA[ = ]]>
+        #{start}
+
+        <if test="id != null and id != ''">
+            AND O_ID = #{id}
+        </if>
+        <if test="staffId != null and staffId != ''">
+            AND O_STAFF_ID = #{staffId}
+        </if>
+        ORDER BY O_MODIFIED DESC
+    </select>
+
+    <delete id="deleteOrder" parameterType="string">
+        UPDATE
+            `ORDER`
+        SET O_STATUS = 0
+        WHERE O_ID = #{id}
+    </delete>
+
+    <update id="updateOrder" parameterType="com.pc.domain.dataobject.OrderDO">
+        UPDATE
+            `ORDER`
+        SET
+            O_MODIFIED = #{modified},
+            O_PRO_LIST = #{proList},
+            O_STAFF_ID = #{staffId},
+            O_STATUS = #{status}
+        WHERE O_ID = #{id}
+    </update>
+
+    <insert id="insertOrder" parameterType="com.pc.domain.dataobject.OrderDO">
+        INSERT INTO
+            `ORDER`
+            (O_ID, O_PRO_LIST, O_STAFF_ID, O_MODIFIED)
+        VALUES (
+        #{id},  #{proList}, #{staffId}, #{modified, jdbcType=TIMESTAMP})
+    </insert>
+
+    <select id="selectEmployee" parameterType="com.pc.query.OrderQuery"
+            resultType="com.pc.domain.dataobject.EmployeeDO">
+        SELECT * FROM EMPLOYEE
+        <if test="staffId != null">
+            WHERE S_ID = #{staffId}
+        </if>
+    </select>
+
+</mapper>

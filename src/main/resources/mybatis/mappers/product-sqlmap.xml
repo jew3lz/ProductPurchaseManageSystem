@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pc.dao.ProductDAO">
+
+    <resultMap id="ProductDO" type="com.pc.domain.dataobject.ProductDO">
+        <id property="id" column="P_ID" jdbcType="VARCHAR"/>
+        <result property="price" column="P_PRICE" jdbcType="NUMERIC"/>
+        <result property="usage" column="P_USAGE" jdbcType="VARCHAR"/>
+        <result property="orderId" column="P_ORDER_ID" jdbcType="VARCHAR"/>
+        <result property="name" column="P_NAME" jdbcType="VARCHAR"/>
+        <result property="count" column="P_COUNT" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <select id="queryProduct" parameterType="com.pc.query.ProductQuery" resultMap="ProductDO">
+        SELECT
+        *
+        FROM PRODUCT
+        WHERE 1 = 1
+        <if test="id != null and id != ''">
+            AND P_ID = #{id}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND P_ORDER_ID = #{orderId}
+        </if>
+        <if test="name != null and name != ''">
+            AND P_NAME = #{name}
+        </if>
+        ORDER BY P_ID DESC
+    </select>
+
+    <delete id="deleteProduct" parameterType="string">
+        DELETE
+        FROM
+        PRODUCT
+        WHERE P_ID = #{id}
+    </delete>
+
+    <update id="updateProduct" parameterType="com.pc.domain.dataobject.ProductDO">
+        UPDATE
+        PRODUCT
+        SET
+        P_PRICE = #{price},
+        P_USAGE = #{usage},
+        P_ORDER_ID = #{orderId},
+        P_NAME = #{name},
+        P_COUNT = #{count}
+        WHERE P_ID = #{id}
+    </update>
+
+    <insert id="insertProduct" parameterType="com.pc.domain.dataobject.ProductDO" >
+        INSERT INTO
+        PRODUCT
+        VALUES
+        #{id}, #{price}, #{usage}, #{orderId}, #{name}, #{count}
+    </insert>
+
+</mapper>
