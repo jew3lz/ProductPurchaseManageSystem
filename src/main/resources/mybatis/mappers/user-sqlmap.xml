@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pc.dao.UserDAO">
+
+    <resultMap id="UserMap" type="com.pc.domain.dataobject.UserDO">
+        <id property="id" column="USER_ID" jdbcType="VARCHAR"/>
+        <result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
+        <result property="userPassword" column="USER_PASSWORD" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryUser" parameterType="com.pc.query.UserQuery" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        `USER` u
+        WHERE 1=1
+        <if test="userName != null || userName != ''">
+            AND u.USER_NAME = #{userName}
+        </if>
+        <if test="userId != null || userId != ''">
+            AND u.USER_Id = #{userName}
+        </if>
+        AND u.USER_PASSWORD = #{userPassword}
+    </select>
+
+
+</mapper>
