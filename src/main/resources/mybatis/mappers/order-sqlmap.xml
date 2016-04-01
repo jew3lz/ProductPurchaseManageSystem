@@ -68,12 +68,12 @@
     </select>
 
     <select id="query30DaysOrderCount" parameterType="com.pc.query.OrderQuery"
-            resultMap="com.pc.domain.dataobject.OrderCountDO">
+            resultType="com.pc.domain.dataobject.OrderCountDO">
         SELECT
-        COUNT (*) as `count`,
-        O_MODIFIED as `date`
+        COUNT(*) as `count`,
+        o.O_MODIFIED as `date`
         FROM
-        "ORDER" o
+        `ORDER` o
         WHERE o.O_MODIFIED <![CDATA[ >= ]]> #{start, jdbcType=TIMESTAMP}
         AND o.O_MODIFIED <![CDATA[ <= ]]> #{end, jdbcType=TIMESTAMP}
         GROUP BY o.O_MODIFIED

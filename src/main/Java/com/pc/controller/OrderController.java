@@ -29,7 +29,7 @@ public class OrderController {
 
     static final Long ONE_DAY = 24 * 60 * 60 * 1000L;
 
-    @RequestMapping("query30days")
+    @RequestMapping("/query30days")
     public ResponseEntity<Object> query30days(@RequestParam(required = false, value = "end") Long end) {
 
         OrderQuery query = new OrderQuery();
@@ -38,6 +38,7 @@ public class OrderController {
 
         List<OrderCountDO> resultList = orderDAO.query30DaysOrderCount(query);
         MsgResult<List<OrderCountDO>> result = new MsgResult<List<OrderCountDO>>();
+        result.setValue(resultList);
         return new ResponseEntity<Object>(result, HttpStatus.OK);
     }
 
@@ -58,14 +59,18 @@ public class OrderController {
 
 
     @RequestMapping("/insert")
-    public ResponseEntity<Object> insertOrder(@RequestParam(required = false, value = "id") String id, @RequestParam(required = false, value = "status") Integer status, @RequestParam(required = false, value = "proList") String proList, @RequestParam(required = false, value = "staffId") String staffId) {
+    public ResponseEntity<Object> insertOrder(@RequestParam(required = false, value = "id") String id,
+                                              @RequestParam(required = false, value = "status") Integer status,
+                                              @RequestParam(required = false, value = "proList") String proList,
+                                              @RequestParam(required = false, value = "staffId") String staffId,
+                                              @RequestParam(required = false, value = "modified") Long modified) {
 
         OrderDO orderDO = new OrderDO();
         orderDO.setId(id);
         orderDO.setStatus(status);
         orderDO.setStaffId(staffId);
         orderDO.setProList(proList);
-        orderDO.setModified(new Date(getDayStartTime(System.currentTimeMillis())));
+        orderDO.setModified(new Date(getDayStartTime(modified)));
 
 
         //默认订单号为0
