@@ -50,7 +50,10 @@ public class ProductController {
 
         productDAO.deleteProduct(id);
 
-        return new ResponseEntity<Object>("删除成功", HttpStatus.OK);
+        MsgResult<String> msgResult = new MsgResult<String>();
+        msgResult.setValue("删除成功");
+
+        return new ResponseEntity<Object>(msgResult, HttpStatus.OK);
     }
 
     @RequestMapping("/insert")
@@ -66,7 +69,10 @@ public class ProductController {
         productDO.setCount(count);
 
         productDAO.insertProduct(productDO);
-        return new ResponseEntity<Object>("新增成功", HttpStatus.OK);
+        MsgResult<String> msgResult = new MsgResult<String>();
+        msgResult.setValue("新增成功");
+
+        return new ResponseEntity<Object>(msgResult, HttpStatus.OK);
     }
 
     @RequestMapping("/update")
@@ -82,6 +88,9 @@ public class ProductController {
         productDO.setCount(count);
 
         productDAO.updateProduct(productDO);
-        return new ResponseEntity<Object>("更新成功", HttpStatus.OK);
+        MsgResult<String> msgResult = new MsgResult<String>();
+        msgResult.setValue("更新成功");
+
+        return new ResponseEntity<Object>(msgResult, HttpStatus.OK);
     }
 }

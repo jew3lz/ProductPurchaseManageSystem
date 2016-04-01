@@ -12,6 +12,12 @@
         <result property="status" column="O_STATUS" jdbcType="NUMERIC"/>
     </resultMap>
 
+    <resultMap id="EmployeeDO" type="com.pc.domain.dataobject.EmployeeDO">
+        <id property="id" column="S_ID" jdbcType="VARCHAR"/>
+        <result property="name" column="S_NAME" jdbcType="VARCHAR"/>
+        <result property="deptId" column="S_DEPT_ID" jdbcType="NUMERIC"/>
+    </resultMap>
+
     <select id="queryOrder" parameterType="com.pc.query.OrderQuery" resultMap="OrderDO">
         SELECT
         *
@@ -54,12 +60,23 @@
         #{id},  #{proList}, #{staffId}, #{modified, jdbcType=TIMESTAMP})
     </insert>
 
-    <select id="selectEmployee" parameterType="com.pc.query.OrderQuery"
-            resultType="com.pc.domain.dataobject.EmployeeDO">
+    <select id="selectEmployee" parameterType="com.pc.query.OrderQuery" resultMap="EmployeeDO">
         SELECT * FROM EMPLOYEE
         <if test="staffId != null">
             WHERE S_ID = #{staffId}
         </if>
+    </select>
+
+    <select id="query30DaysOrderCount" parameterType="com.pc.query.OrderQuery"
+            resultMap="com.pc.domain.dataobject.OrderCountDO">
+        SELECT
+        COUNT (*) as `count`,
+        O_MODIFIED as `date`
+        FROM
+        "ORDER" o
+        WHERE o.O_MODIFIED <![CDATA[ >= ]]> #{start, jdbcType=TIMESTAMP}
+        AND o.O_MODIFIED <![CDATA[ <= ]]> #{end, jdbcType=TIMESTAMP}
+        GROUP BY o.O_MODIFIED
     </select>
 
 </mapper>

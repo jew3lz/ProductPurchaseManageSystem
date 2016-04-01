@@ -52,8 +52,8 @@
     <insert id="insertProduct" parameterType="com.pc.domain.dataobject.ProductDO" >
         INSERT INTO
         PRODUCT
-        VALUES
-        #{id}, #{price}, #{usage}, #{orderId}, #{name}, #{count}
+        (P_ID, P_PRICE, P_USAGE, P_ORDER_ID, P_NAME, P_COUNT)
+        VALUES(#{id}, #{price}, #{usage}, #{orderId}, #{name}, #{count})
     </insert>
 
 </mapper>

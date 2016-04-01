@@ -5,36 +5,36 @@ package com.pc.domain.dataobject;
  */
 public class EmployeeDO {
 
-    String s_Id;
+    String id;
 
-    String s_Name;
+    String name;
 
-    Integer s_dept_Id;
+    Integer deptId;
 
-    public String getS_Id() {
-        return s_Id;
+    public String getId() {
+        return id;
     }
 
-    public EmployeeDO setS_Id(String s_Id) {
-        this.s_Id = s_Id;
+    public EmployeeDO setId(String id) {
+        this.id = id;
         return this;
     }
 
-    public String getS_Name() {
-        return s_Name;
+    public String getName() {
+        return name;
     }
 
-    public EmployeeDO setS_Name(String s_Name) {
-        this.s_Name = s_Name;
+    public EmployeeDO setName(String name) {
+        this.name = name;
         return this;
     }
 
-    public Integer getS_dept_Id() {
-        return s_dept_Id;
+    public Integer getDeptId() {
+        return deptId;
     }
 
-    public EmployeeDO setS_dept_Id(Integer s_dept_Id) {
-        this.s_dept_Id = s_dept_Id;
+    public EmployeeDO setDeptId(Integer deptId) {
+        this.deptId = deptId;
         return this;
     }
 }

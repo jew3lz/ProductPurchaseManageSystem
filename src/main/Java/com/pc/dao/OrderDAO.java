@@ -1,6 +1,7 @@
 package com.pc.dao;
 
 import com.pc.domain.dataobject.EmployeeDO;
+import com.pc.domain.dataobject.OrderCountDO;
 import com.pc.domain.dataobject.OrderDO;
 import com.pc.query.OrderQuery;
 
@@ -20,5 +21,7 @@ public interface OrderDAO {
     void updateOrder(OrderDO orderDO);
 
     List<EmployeeDO> selectEmployee(OrderQuery query);
+
+    List<OrderCountDO> query30DaysOrderCount(OrderQuery query);
 
 }

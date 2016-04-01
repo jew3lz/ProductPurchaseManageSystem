@@ -2,6 +2,7 @@ package com.pc.controller;
 
 import com.pc.dao.OrderDAO;
 import com.pc.domain.dataobject.EmployeeDO;
+import com.pc.domain.dataobject.OrderCountDO;
 import com.pc.domain.dataobject.OrderDO;
 import com.pc.query.OrderQuery;
 import com.pc.result.MsgResult;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,20 @@ public class OrderController {
 
     @Autowired
     private OrderDAO orderDAO;
+
+    static final Long ONE_DAY = 24 * 60 * 60 * 1000L;
+
+    @RequestMapping("query30days")
+    public ResponseEntity<Object> query30days(@RequestParam(required = false, value = "end") Long end) {
+
+        OrderQuery query = new OrderQuery();
+        query.setEnd(new Date(end));
+        query.setStart(new Date(end - 30 * ONE_DAY));
+
+        List<OrderCountDO> resultList = orderDAO.query30DaysOrderCount(query);
+        MsgResult<List<OrderCountDO>> result = new MsgResult<List<OrderCountDO>>();
+        return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
 
     @RequestMapping("/list")
     public ResponseEntity<Object> queryOrderList(@RequestParam(required = false, value = "id") String id, @RequestParam(required = false, value = "staffId") String staffId, @RequestParam(required = false, value = "time") Long time) {
@@ -42,19 +58,22 @@ public class OrderController {
 
 
     @RequestMapping("/insert")
-    public ResponseEntity<Object> insertOrder(@RequestParam(required = false, value = "id") String id, @RequestParam(required = false, value = "proList") String proList, @RequestParam(required = false, value = "staffId") String staffId) {
+    public ResponseEntity<Object> insertOrder(@RequestParam(required = false, value = "id") String id, @RequestParam(required = false, value = "status") Integer status, @RequestParam(required = false, value = "proList") String proList, @RequestParam(required = false, value = "staffId") String staffId) {
 
         OrderDO orderDO = new OrderDO();
         orderDO.setId(id);
+        orderDO.setStatus(status);
         orderDO.setStaffId(staffId);
         orderDO.setProList(proList);
-        orderDO.setModified(new Date(System.currentTimeMillis()));
+        orderDO.setModified(new Date(getDayStartTime(System.currentTimeMillis())));
 
 
         //默认订单号为0
         orderDAO.insertOrder(orderDO);
+        MsgResult<String> msgResult = new MsgResult<String>();
+        msgResult.setValue("新增成功");
 
-        return new ResponseEntity<Object>("新增成功", HttpStatus.OK);
+        return new ResponseEntity<Object>(msgResult, HttpStatus.OK);
     }
 
     @RequestMapping("/delete")
@@ -62,20 +81,27 @@ public class OrderController {
 
         orderDAO.deleteOrder(id);
 
-        return new ResponseEntity<Object>("删除成功", HttpStatus.OK);
+        MsgResult<String> msgResult = new MsgResult<String>();
+        msgResult.setValue("删除成功");
+
+        return new ResponseEntity<Object>(msgResult, HttpStatus.OK);
     }
 
     @RequestMapping("/update")
-    public ResponseEntity<Object> updateOrder(@RequestParam(required = false, value = "id") String id, @RequestParam(required = false, value = "proList") String proList, @RequestParam(required = false, value = "staffId") String staffId) {
+    public ResponseEntity<Object> updateOrder(@RequestParam(required = false, value = "id") String id, @RequestParam(required = false, value = "proList") String proList, @RequestParam(required = false, value = "staffId") String staffId, @RequestParam(required = false, value = "status") Integer status) {
         OrderDO orderDO = new OrderDO();
         orderDO.setId(id);
         orderDO.setStaffId(staffId);
         orderDO.setProList(proList);
-        orderDO.setModified(new Date(System.currentTimeMillis()));
+        orderDO.setStatus(status);
+        orderDO.setModified(new Date(getDayStartTime(System.currentTimeMillis())));
 
         orderDAO.updateOrder(orderDO);
 
-        return new ResponseEntity<Object>("更新成功", HttpStatus.OK);
+        MsgResult<String> msgResult = new MsgResult<String>();
+        msgResult.setValue("更新成功");
+
+        return new ResponseEntity<Object>(msgResult, HttpStatus.OK);
     }
 
     @RequestMapping("/listEmployee")
@@ -88,5 +114,27 @@ public class OrderController {
         result.setValue(employeeDOs);
 
         return new ResponseEntity<Object>(result, HttpStatus.OK);
+    }
+
+    /**
+     * 获取一天的开始时间
+     *
+     * @param time
+     * @return
+     */
+    public static long getDayStartTime(Long time) {
+        if (time == null)
+            return 0;
+        Date now = new Date(time);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        long start = calendar.getTimeInMillis();
+
+        return start;
     }
 }
