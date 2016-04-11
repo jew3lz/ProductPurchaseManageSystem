@@ -34,7 +34,7 @@ public class UserController {
         MsgResult<String> result = new MsgResult<String >();
 
         Integer count = userDAO.queryUser(query);
-        if(count == 0){
+        if(count == 1){
             result.setValue("ok");
         }else{
             result.setValue("out");

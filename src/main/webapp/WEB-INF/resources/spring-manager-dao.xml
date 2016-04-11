@@ -26,4 +26,9 @@
         <property name="mapperInterface" value="com.pc.dao.OrderDAO"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
+
+    <bean id="userDAO" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.pc.dao.UserDAO"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
 </beans>
